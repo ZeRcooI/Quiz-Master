@@ -31,7 +31,7 @@ public class Quiz : MonoBehaviour
     [Header("ProgressBar")]
     [SerializeField] private Slider _progressBar;
 
-    public bool _isComplete = false;
+    private bool _isComplete = false;
 
     public void OnAnswerSelected(int index)
     {
@@ -42,23 +42,16 @@ public class Quiz : MonoBehaviour
         _timer.CancelTimer();
 
         _scoreText.text = $"Правильно: {_scoreKeeper.CalculateScore()}.";
-
-        if (_progressBar.value == _progressBar.maxValue)
-        {
-            _isComplete = true;
-        }
     }
 
-    //public bool GetIsComplete()
-    //{
-    //    return _isComplete;
-    //}
+    public bool GetIsComplete()
+    {
+        return _isComplete;
+    }
 
-    private void Start()
+    private void Awake()
     {
         _timer = FindObjectOfType<Timer>();
-        //DisplayQuestion();
-
         _scoreKeeper = FindObjectOfType<ScoreKeeper>();
 
         _progressBar.maxValue = _questions.Count;
@@ -71,6 +64,12 @@ public class Quiz : MonoBehaviour
 
         if (_timer.LoadNextQuestion)
         {
+            if (_progressBar.value == _progressBar.maxValue)
+            {
+                _isComplete = true;
+                return;
+            }
+
             _hasAnsweredEarly = false;
 
             GetNextQuestion();

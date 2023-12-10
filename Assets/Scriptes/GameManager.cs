@@ -1,21 +1,36 @@
-//using UnityEngine;
+using System.Xml.Serialization;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-//public class GameManager : MonoBehaviour
-//{
-//    private Quiz _quiz;
-//    private EndScreen _endScreen;
+public class GameManager : MonoBehaviour
+{
+    private Quiz _quiz;
+    private EndScreen _endScreen;
 
-//    private void Start()
-//    {
-//        _quiz = FindObjectOfType<Quiz>();
-//        _endScreen = FindObjectOfType<EndScreen>();
+    public void OnReplayLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 
-//        _quiz.gameObject.SetActive(true);
-//        _endScreen.gameObject.SetActive(false);
-//    }
+    private void Awake()
+    {
+        _quiz = FindObjectOfType<Quiz>();
+        _endScreen = FindObjectOfType<EndScreen>();
+    }
 
-//    void Update()
-//    {
-        
-//    }
-//}
+    private void Start()
+    {
+        _quiz.gameObject.SetActive(true);
+        _endScreen.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (_quiz.GetIsComplete())
+        {
+            _quiz.gameObject.SetActive(false);
+            _endScreen.gameObject.SetActive(true);
+            _endScreen.ShowFinalScore();
+        }
+    }
+}
