@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] private float _timeToCompleteQuestion = 20;
-    [SerializeField] private float _timeToShowCorrectAnswer = 5;
+    [SerializeField] private float _timeToCompleteQuestion = 20f;
+    [SerializeField] private float _timeToShowCorrectAnswer = 5f;
     [SerializeField] private bool _isAnsweringQuestion = false;
 
     private float _timerValue;
@@ -23,10 +23,10 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
-        UpdatteTimer();
+        UpdateTimer();
     }
 
-    private void UpdatteTimer()
+    private void UpdateTimer()
     {
         _timerValue -= Time.deltaTime;
 
@@ -56,10 +56,10 @@ public class Timer : MonoBehaviour
             }
         }
 
-        if (_timerValue <= 0)
-        {
-            _timerValue = _timeToCompleteQuestion;
-        }
+        //if (_timerValue <= 0)
+        //{
+        //    _timerValue = _timeToCompleteQuestion;
+        //}
 
         Debug.Log($"{_isAnsweringQuestion}: {_timerValue} = {FillFraction}");
     }

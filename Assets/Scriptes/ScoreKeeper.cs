@@ -29,4 +29,9 @@ public class ScoreKeeper : MonoBehaviour
     {
         return $"{_correctAnswer} из {_questionSeen}";
     }
+
+    //public int CalculateScorePercent()
+    //{
+    //    return Mathf.RoundToInt(_correctAnswer / (float)_questionSeen * 100);//Рассчитать в процентах и округить до инта
+    //}
 }

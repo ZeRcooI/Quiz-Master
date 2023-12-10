@@ -7,14 +7,14 @@ public class Quiz : MonoBehaviour
 {
     [Header("Questions")]
     [SerializeField] private TextMeshProUGUI _questionText;
-    [SerializeField] private List<QuestionsSO> _questions = new List<QuestionsSO>();
-    [SerializeField] private QuestionsSO _currentQuestion;
+    [SerializeField] private Questions _currentQuestion;
+    [SerializeField] private List<Questions> _questions = new List<Questions>();
 
     [Header("Answers")]
     [SerializeField] private GameObject[] _answerButtons;
     private int _noAnswerIndex = -1;
     private int _correctAnswerIndex;
-    private bool _hasAnsweredEarly;
+    private bool _hasAnsweredEarly = true;
 
     [Header("Button Colors")]
     [SerializeField] private Sprite _defaultAnswerSprite;
@@ -28,6 +28,11 @@ public class Quiz : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _scoreText;
     ScoreKeeper _scoreKeeper;
 
+    [Header("ProgressBar")]
+    [SerializeField] private Slider _progressBar;
+
+    public bool _isComplete = false;
+
     public void OnAnswerSelected(int index)
     {
         _hasAnsweredEarly = true;
@@ -37,12 +42,27 @@ public class Quiz : MonoBehaviour
         _timer.CancelTimer();
 
         _scoreText.text = $"Правильно: {_scoreKeeper.CalculateScore()}.";
+
+        if (_progressBar.value == _progressBar.maxValue)
+        {
+            _isComplete = true;
+        }
     }
+
+    //public bool GetIsComplete()
+    //{
+    //    return _isComplete;
+    //}
 
     private void Start()
     {
         _timer = FindObjectOfType<Timer>();
+        //DisplayQuestion();
+
         _scoreKeeper = FindObjectOfType<ScoreKeeper>();
+
+        _progressBar.maxValue = _questions.Count;
+        _progressBar.value = 0;
     }
 
     private void Update()
@@ -70,8 +90,7 @@ public class Quiz : MonoBehaviour
 
         if (index == _currentQuestion.GetCorrectAnswerIndex())
         {
-            _questionText.text = "Правильно!";
-
+            _questionText.text = "Поздравляем!";
             buttonImage = _answerButtons[index].GetComponent<Image>();
             buttonImage.sprite = _correctAnswerSprite;
 
@@ -80,9 +99,7 @@ public class Quiz : MonoBehaviour
         else
         {
             _correctAnswerIndex = _currentQuestion.GetCorrectAnswerIndex();
-
             string correctAnswer = _currentQuestion.GetAnswer(_correctAnswerIndex);
-
             _questionText.text = $"Увы! Неверно... Правильный ответ был: \n{correctAnswer}.";
 
             buttonImage = _answerButtons[_correctAnswerIndex].GetComponent<Image>();
@@ -98,6 +115,8 @@ public class Quiz : MonoBehaviour
             SetDefaultButtonSprites();
             GetRandomQuestion();
             DisplayQuestion();
+            _progressBar.value++;
+
             _scoreKeeper.IncrementQuestionSeen();
         }
     }
